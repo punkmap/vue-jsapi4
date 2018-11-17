@@ -79,7 +79,7 @@ export default {
 @import url('https://js.arcgis.com/4.2/esri/css/main.css');
 
 #viewDiv {
-  height: 500px;
+  height: 1000px;
   width: 100%;
 }
 
