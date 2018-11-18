@@ -33,19 +33,46 @@ export default {
   mounted () {
     console.log('map: mounted')
     loadModules([
-      'esri/Map',
-      'esri/views/SceneView',
-      'esri/core/watchUtils'
+      'esri/Map', 'esri/views/SceneView', 'esri/layers/FeatureLayer', 'esri/core/watchUtils'
     ], {
       // use a specific version instead of latest 4.x
       url: 'https://js.arcgis.com/4.2/'
-    }).then(([EsriMap, SceneView, watchUtils]) => {
+    }).then(([EsriMap, SceneView, FeatureLayer, watchUtils]) => {
       // create map with the given options at a DOM node w/ id 'mapNode'
+      /* var renderer = {
+        type: 'simple',  // autocasts as new SimpleRenderer()
+        symbol: {
+          type: 'simple-fill',  // autocasts as new SimpleFillSymbol()
+          color: [ 255, 128, 0, 0.5 ],
+          outline: {  // autocasts as new SimpleLineSymbol()
+            width: 1,
+            color: 'white'
+          }
+        }
+      } */
+
+      var ashvlParks = new FeatureLayer({
+        // URL to the service
+        url: 'https://arcgis.ashevillenc.gov/arcgis/rest/services/Planning/Parks/FeatureServer/0',
+        outFields: ['*'],
+        id: 'ashvlParks',
+        // renderer: renderer,
+        opacity: 1,
+        visible: true,
+        elevationInfo: {
+          mode: 'on-the-ground'
+        }
+      })
       let map
       if (!this.$store.state.map) {
         map = new EsriMap({
           basemap: 'satellite',
+          layers: [ashvlParks],
           ground: 'world-elevation'
+        })
+        console.log('layer.id:')
+        map.layers.forEach(layer => {
+          console.log(layer.id)
         })
         this.$store.state.map = map
       } else {
