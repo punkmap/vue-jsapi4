@@ -7,6 +7,7 @@
     <h2 class="info" v-if="name === 'client'">
       Please refresh the page
     </h2>
+    <!--todo: pull map out into component-->
     <div id="viewDiv"></div>
     <nuxt-link class="button" to="/">
       Home page
@@ -14,12 +15,19 @@
     <nuxt-link class="button" to="/about">
       About page
     </nuxt-link>
+    <resetMapButton type="button">I'm a button. Here I am.</resetMapButton>
   </section>
 </template>
 <script>
 import { loadModules } from 'esri-loader'
-
+import ResetMapButton from '../components/resetMapButton.vue'
+import Vue from 'vue'
+var ButtonComponent = Vue.extend(ResetMapButton)
+var resetButton = new ButtonComponent()
+resetButton.id = 'resetButtonId'
+console.log(resetButton.id)
 export default {
+  components: { ResetMapButton },
   data ({ req }) {
     return {
       name: req ? 'server' : 'client'
@@ -39,18 +47,6 @@ export default {
       url: 'https://js.arcgis.com/4.2/'
     }).then(([EsriMap, SceneView, FeatureLayer, watchUtils]) => {
       // create map with the given options at a DOM node w/ id 'mapNode'
-      /* var renderer = {
-        type: 'simple',  // autocasts as new SimpleRenderer()
-        symbol: {
-          type: 'simple-fill',  // autocasts as new SimpleFillSymbol()
-          color: [ 255, 128, 0, 0.5 ],
-          outline: {  // autocasts as new SimpleLineSymbol()
-            width: 1,
-            color: 'white'
-          }
-        }
-      } */
-
       var ashvlParks = new FeatureLayer({
         // URL to the service
         url: 'https://arcgis.ashevillenc.gov/arcgis/rest/services/Planning/Parks/FeatureServer/0',
@@ -68,7 +64,6 @@ export default {
         url: 'https://arcgis.ashevillenc.gov/arcgis/rest/services/Arts_Culture_History/OpenTreeMap/FeatureServer/0',
         outFields: ['*'],
         id: 'ashvlTrees',
-        // renderer: renderer,
         opacity: 1,
         visible: true,
         elevationInfo: {
@@ -82,7 +77,6 @@ export default {
           layers: [ashvlParks, ashvlTrees],
           ground: 'world-elevation'
         })
-        console.log('layer.id:')
         map.layers.forEach(layer => {
           console.log(layer.id)
         })
@@ -90,10 +84,17 @@ export default {
       } else {
         map = this.$store.state.map
       }
-      const view = new SceneView({
+      var view = new SceneView({
         container: 'viewDiv',
         map,
         camera: this.$store.state.camera
+      })
+      view.then(function () {
+        console.log('theSceneViewIsNowLoaded')
+        // All the resources in the MapView and the map have loaded. Now execute additional processes
+      }, function (error) {
+        // Use the errback function to handle when the view doesn't load properly
+        console.log("The view's resources failed to load: ", error)
       })
 
       this.$store.state.watchHandle = watchUtils.watch(view, 'camera', (camera) => {

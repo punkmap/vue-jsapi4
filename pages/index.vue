@@ -7,7 +7,7 @@
     <nuxt-link class="button" to="/about">
       About page
     </nuxt-link>
-    <nuxt-link class="button" to="/map">
+    <nuxt-link class="button" to="/map_page">
       Map page
     </nuxt-link>
   </section>
