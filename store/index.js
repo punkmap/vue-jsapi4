@@ -12,6 +12,6 @@ export const state = {
       }
     },
     heading: 280,
-    tilt: 83
+    tilt: 77.5
   }
 }

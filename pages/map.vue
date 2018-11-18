@@ -63,11 +63,23 @@ export default {
           mode: 'on-the-ground'
         }
       })
+      var ashvlTrees = new FeatureLayer({
+        // URL to the service
+        url: 'https://arcgis.ashevillenc.gov/arcgis/rest/services/Arts_Culture_History/OpenTreeMap/FeatureServer/0',
+        outFields: ['*'],
+        id: 'ashvlTrees',
+        // renderer: renderer,
+        opacity: 1,
+        visible: true,
+        elevationInfo: {
+          mode: 'on-the-ground'
+        }
+      })
       let map
       if (!this.$store.state.map) {
         map = new EsriMap({
           basemap: 'satellite',
-          layers: [ashvlParks],
+          layers: [ashvlParks, ashvlTrees],
           ground: 'world-elevation'
         })
         console.log('layer.id:')
