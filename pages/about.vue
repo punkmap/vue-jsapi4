@@ -10,7 +10,7 @@
     <nuxt-link class="button" to="/">
       Home page
     </nuxt-link>
-    <nuxt-link class="button" to="/map">
+    <nuxt-link class="button" to="/map_page">
       Map page
     </nuxt-link>
   </section>
